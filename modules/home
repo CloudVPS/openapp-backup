@@ -1,0 +1,24 @@
+#!/bin/sh
+# Prio: 100
+
+. /usr/src/openapp-backup/includes/index
+
+
+###
+# This script will backup and restore /home
+
+BACKUPDIR=$1
+ACTION=$2
+
+run_backup() {
+    rsync -a /home ${BACKUPDIR} || fatal "Could not rsync /home to ${BACKUPDIR}"
+}
+
+case ${ACTION} in
+    backup)
+        run_backup
+    ;;
+    restore)
+        echo "Not implemented"
+    ;;
+esac

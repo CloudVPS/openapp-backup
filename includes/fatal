@@ -1,0 +1,6 @@
+fatal() {
+    echo $1
+    FATALS=$FATALS+1
+    exit 1
+}
+

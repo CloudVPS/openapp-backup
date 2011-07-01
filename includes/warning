@@ -1,0 +1,4 @@
+warning() {
+    echo "Warning: $1"
+    WARNINGS=$((WARNINGS+1))
+}

@@ -1,0 +1,47 @@
+#!/bin/sh
+
+###
+# This script will look for scripts to run to create a backup of the system
+# which should be suitable for restoring and migrating to another machine
+###
+
+. /usr/src/openapp-backup/includes/index
+
+[ `id -u` -gt 0 ]  && fatal "This script must be run as root"
+
+DATE=`date`
+HASH=`echo "$$ ${DATE}" | md5sum | cut -f1 -d ' '`
+BACKUPDIR=/tmp/openapp-backup-${HASH}
+MODULEDIR=/usr/src/openapp-backup/modules
+WARNINGS=0
+FATALS=0
+
+###
+# Create a dir in which we will create the backup
+mkdir -v ${BACKUPDIR}
+
+###
+# Now look for specific modules to backup
+MODULES=$(grep -H '^# Prio' ${MODULEDIR}/* | sort -k 3 -n | cut -f 1 -d :)
+for SCRIPT in $MODULES; do
+    echo "Running ${SCRIPT}"
+    OUTPUT=$(${SCRIPT} ${BACKUPDIR} backup 2> /dev/null)
+    [ -z "${OUTPUT}" ] || warning "${SCRIPT}: $OUTPUT"
+done
+
+if [ $WARNINGS -eq 0 -a $FATALS -eq 0 ]; then
+    echo "All went well"
+    echo "Creating tar-file"
+    tar zcf /tmp/openapp-backup.tar.gz ${BACKUPDIR}/ || warning "Could not create tar file"
+
+    rm -rf ${BACKUPDIR};
+    if [ $WARNINGS -eq 0 -a $FATALS -eq 0 ]; then
+        echo "Your backupfile is: /tmp/openapp-backup.tar.gz"
+    else
+        echo "Something went wrong while creating the tar file. Please investigate"
+        exit 1
+    fi
+else
+    echo "There where $FATALS fatal errors and $WARNINGS warnings"
+    exit 1
+fi

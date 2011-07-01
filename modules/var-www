@@ -1,0 +1,23 @@
+#!/bin/sh
+# Prio: 2
+
+. /usr/src/openapp-backup/includes/index
+
+###
+# This script will backup and restore /var/www
+
+BACKUPDIR=$1
+ACTION=$2
+
+run_backup() {
+    rsync -a /var/www ${BACKUPDIR} || fatal "Could not rsync /var/www to ${BACKUPDIR}"
+}
+
+case ${ACTION} in
+    backup)
+        run_backup
+    ;;
+    restore)
+        echo "Not implemented"
+    ;;
+esac

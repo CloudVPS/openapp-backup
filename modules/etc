@@ -1,0 +1,28 @@
+#!/bin/sh
+# Prio: 2
+
+. /usr/src/openapp-backup/includes/index
+
+###
+# This script will backup and restore /etc
+
+BACKUPDIR=$1
+ACTION=$2
+
+ETC_EXCLUDES="hosts hostname network/interfaces fstab rc*.d apparmor.d init init.d ssh"
+
+run_backup() {
+    for exclude in ${ETC_EXCLUDES}; do
+        ETC_EXCL_STRING="${ETC_EXCL_STRING}--exclude ${exclude} "
+    done
+    rsync -a ${ETC_EXCL_STRING} /etc ${BACKUPDIR} || fatal "Could not rsync /etc to ${BACKUPDIR}"
+}
+
+case ${ACTION} in
+    backup)
+        run_backup
+    ;;
+    restore)
+        echo "Not implemented"
+    ;;
+esac

@@ -1,0 +1,6 @@
+include_dir=/usr/src/openapp-backup/includes
+
+for i in `ls ${include_dir}`; do
+    [ "$i" = "index" ] && continue;
+    . "${include_dir}/${i}"
+done
