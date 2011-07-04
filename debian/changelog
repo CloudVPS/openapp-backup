@@ -1,4 +1,4 @@
-openapp-backup (0.1-1) unstable; urgency=low
+openapp-backup (0.1-1) stable; urgency=low
 
   * Initial release of openapp-backup. Does some stuff, but probably not everything yet.
 
