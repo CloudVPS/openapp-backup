@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Prio: 1
 
 . /usr/src/openapp-backup/includes/index
@@ -11,13 +11,43 @@ ACTION=$2
 
 run_backup() {
     dpkg --get-selections > ${BACKUPDIR}/dpkg-selections || fatal "Could not run dpkg-selections"
+
+    ###
+    # Copy sources.list files to the backup location
+    mkdir -p ${BACKUPDIR}/apt-sources
+    cp /etc/apt/sources.list ${BACKUPDIR}/apt-sources
+    cp -r /etc/apt/sources.list.d/*.list ${BACKUPDIR}/apt-sources
+
+    ###
+    # Export gpg-keys
+    apt-key exportall > ${BACKUPDIR}/apt-keys
 }
+
+run_restore() {
+    ###
+    # Copy sources.list files to /etc/apt/sources.list.d/
+    cp ${BACKUPDIR}/apt-sources/*.list /etc/apt/sources.list.d/
+
+    ###
+    # Import keys from the old system
+    apt-key add ${BACKUPDIR}/apt-keys
+
+    ###
+    # Run apt-get update
+    apt-get update
+
+    ###
+    # Now that we have all sources in place, let's set selections and install
+    cat ${BACKUPDIR}/dpkg-selections | dpkg --set-selections 
+    DEBIAN_FRONTEND=noninteractive apt-get -f -y --no-install-recommends --allow-unauthenticated dselect-upgrade
+}
+
 
 case ${ACTION} in
     backup)
         run_backup
     ;;
     restore)
-        echo "Not implemented"
+        run_restore
     ;;
 esac

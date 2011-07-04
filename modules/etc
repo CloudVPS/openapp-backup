@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Prio: 2
 
 . /usr/src/openapp-backup/includes/index
@@ -18,11 +18,15 @@ run_backup() {
     rsync -a ${ETC_EXCL_STRING} /etc ${BACKUPDIR} || fatal "Could not rsync /etc to ${BACKUPDIR}"
 }
 
+run_restore() {
+    rsync -a ${BACKUPDIR}/ /
+}
+
 case ${ACTION} in
     backup)
         run_backup
     ;;
     restore)
-        echo "Not implemented"
+        run_restore
     ;;
 esac

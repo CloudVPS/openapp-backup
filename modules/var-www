@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Prio: 2
 
 . /usr/src/openapp-backup/includes/index
@@ -13,11 +13,15 @@ run_backup() {
     rsync -a /var/www ${BACKUPDIR} || fatal "Could not rsync /var/www to ${BACKUPDIR}"
 }
 
+run_restore() {
+    rsync -a --delete ${BACKUPDIR}/ /var
+}
+
 case ${ACTION} in
     backup)
         run_backup
     ;;
     restore)
-        echo "Not implemented"
+        run_restore
     ;;
 esac
