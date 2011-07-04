@@ -5,7 +5,7 @@
 # backup-file created by openapp-backup.
 ###
 
-. /usr/src/openapp-backup/includes/index
+. /usr/lib/openapp-backup/includes/index
 
 [ -z $1 ] && fatal "You should enter an argument, the file you want to restore from"
 [ -f ${1} ] || fatal "Cannot find the file you want me to use to restore"
@@ -13,7 +13,7 @@
 [ `id -u` -gt 0 ]  && fatal "This script must be run as root"
 
 BACKUPDIR=$(mktemp -d)
-MODULEDIR=/usr/src/openapp-backup/modules
+MODULEDIR=/usr/lib/openapp-backup/modules
 WARNINGS=0
 FATALS=0
 

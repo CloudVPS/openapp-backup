@@ -1,0 +1,50 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH OPENAPP-JOOMLA-DETECT 1 "June 22, 2011"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+openapp-joomla-detect \- detect which version of Joomla this machine runs
+.SH SYNOPSIS
+.B openapp-joomla-detect <installdir> [version to install]
+.SH DESCRIPTION
+This manual page documents briefly the
+.B openapp-joomla-detect
+command.
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics,
+.\" respectively.
+\fBopenapp-joomla-detect\fP is a program that tries to find out which version
+.br
+of Joomla is active on this machine. It is used by the postinst/postrm scripts in
+.br
+the openapp-joomla package to determine if an upgrade or install is needed.
+.br
+The versiondetection is needed because one can also upgrade Joomla via the
+.br
+Joomla frontend.
+.SH OPTIONS
+This program needs at least one option, the directory to look for a Joomla install.
+.br
+Secondly (optional), the version of Joomla you are going to install. If only
+.br
+one argument is given, it prints the currently found version.
+.SH AUTHOR
+openapp-joomla-detect was written by Mark Schouten.
+.PP
+This manual page was written by Mark Schouten <mark@tuxis.nl>, for the OpenApp
+.br
+project (and may be used by others).

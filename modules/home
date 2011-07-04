@@ -1,7 +1,7 @@
 #!/bin/bash
 # Prio: 100
 
-. /usr/src/openapp-backup/includes/index
+. /usr/lib/openapp-backup/includes/index
 
 ###
 # This script will backup and restore /home

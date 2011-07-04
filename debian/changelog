@@ -1,0 +1,5 @@
+openapp-backup (0.1-1) unstable; urgency=low
+
+  * Initial release of openapp-backup. Does some stuff, but probably not everything yet.
+
+ -- Mark Schouten <mark@tuxis.nl>  Mon, 04 Jul 2011 21:33:04 +0200
