@@ -1,3 +1,9 @@
+openapp-backup (0.2-1) stable; urgency=low
+
+  * Add support for symlinks/scripts that other packages can create so they can provide their own backupscripts
+
+ -- Mark Schouten <mark@tuxis.nl>  Tue, 05 Jul 2011 17:52:04 +0200
+
 openapp-backup (0.1-1) stable; urgency=low
 
   * Initial release of openapp-backup. Does some stuff, but probably not everything yet.

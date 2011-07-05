@@ -10,6 +10,7 @@ BACKUPDIR=$1
 ACTION=$2
 
 run_backup() {
+	[ -x /usr/bin/mysqldump ] || fatal "Mysqldump is not installed. We will not run"
     MYSQLDUMPOPTS="--defaults-file=/etc/mysql/debian.cnf --add-drop-database --add-locks --all-databases --allow-keywords --create-options --disable-keys --events --extended-insert --lock-all-tables --quick --routines"
     set -o pipefail
     mysqldump ${MYSQLDUMPOPTS} | gzip > ${BACKUPDIR}/mysqldump.sql.gz || fatal "Something went wrong while creating a database dump"
