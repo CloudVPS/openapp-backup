@@ -9,7 +9,20 @@
 
 [ `id -u` -gt 0 ]  && fatal "This script must be run as root"
 
-BACKUPDIR=$(mktemp -d)
+function show_help() {
+	echo "openapp-backup [-n]"
+	echo ""
+	echo "-n : Only show which scripts you would run, don't actually do anything"
+	echo ""
+	exit 1;
+}
+
+if [ ! -z $1 ]; then
+	[ "$1" = "-n" ] || show_help
+	DRY_RUN=yes
+fi
+
+[ -z ${DRY_RUN} ] && BACKUPDIR=$(mktemp -d)
 MODULEDIR=/usr/lib/openapp-backup/modules
 WARNINGS=0
 FATALS=0
@@ -20,10 +33,12 @@ MODULES=$(grep -H '^# Prio' ${MODULEDIR}/* | sort -k 3 -n | cut -f 1 -d :)
 for SCRIPT in $MODULES; do
     echo "Running ${SCRIPT}"
     SCRIPTNAME=$(basename ${SCRIPT})
-    mkdir -p ${BACKUPDIR}/${SCRIPTNAME}
-    OUTPUT=$(${SCRIPT} ${BACKUPDIR}/${SCRIPTNAME} backup 2> /dev/null)
+	[ -z ${DRY_RUN} ] && mkdir -p ${BACKUPDIR}/${SCRIPTNAME}
+    [ -z ${DRY_RUN} ] && OUTPUT=$(${SCRIPT} ${BACKUPDIR}/${SCRIPTNAME} backup 2> /dev/null)
     [ -z "${OUTPUT}" ] || warning "${SCRIPT}: $OUTPUT"
 done
+
+[ -z ${DRY_RUN} ] || exit 0;
 
 if [ $WARNINGS -eq 0 -a $FATALS -eq 0 ]; then
     echo "All went well"
