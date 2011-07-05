@@ -12,8 +12,17 @@
 
 [ `id -u` -gt 0 ]  && fatal "This script must be run as root"
 
+function show_help() {
+	echo "openapp-restore filename"
+	echo ""
+	echo "filename : The openapp-backup archive you want to restore"
+	echo ""
+	exit 1;
+}
+
 BACKUPDIR=$(mktemp -d)
-MODULEDIR=/usr/lib/openapp-backup/modules
+BASEMODULES=/usr/lib/openapp-backup/modules
+MODULEDIR=/etc/openapp-backup/scripts.d
 WARNINGS=0
 FATALS=0
 
@@ -23,16 +32,28 @@ cd ${BACKUPDIR}
 tar --numeric-owner -zxf ${1}
 
 ###
-# Now look for specific modules to backup
-MODULES=$(grep -H '^# Prio' ${MODULEDIR}/* | sort -k 3 -n | cut -f 1 -d :)
+# Make sure we run these first
+MODULES="${BASEMODULES}/dpkg-selections ${BASEMODULES}/etc"
+
+###
+# Now look for specific modules to restore from
+MODULES="${MODULES} "$(grep -H '^# Prio' "${MODULEDIR}"/* 2>/dev/null | sort -k 3 -n | cut -f 1 -d :)
 for SCRIPT in $MODULES; do
     SCRIPTNAME=$(basename ${SCRIPT})
     ###
     # Don't run this script if the backup doesn't contain a dir for it.
     [ -d ${BACKUPDIR}/${SCRIPTNAME} ] || continue
 
+
     echo "Running ${SCRIPTNAME}..."
     OUTPUT=$(${SCRIPT} ${BACKUPDIR}/${SCRIPTNAME} restore 2> /dev/null)
+
+	###
+	# After we ran etc (which restored the symlinks of the box we're restoring)
+	# refresh the modulelist. This will cause dpkg and etc to run again, but
+	# that's not really an issue.
+	[ "${SCRIPTNAME}" = "etc" ] && MODULES=$(grep -H '^# Prio' "${MODULEDIR}"/* 2>/dev/null | sort -k 3 -n | cut -f 1 -d :)
+
     [ -z "${OUTPUT}" ] || warning "${SCRIPT}: $OUTPUT"
 done
 

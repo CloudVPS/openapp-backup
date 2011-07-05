@@ -23,13 +23,18 @@ if [ ! -z $1 ]; then
 fi
 
 [ -z ${DRY_RUN} ] && BACKUPDIR=$(mktemp -d)
-MODULEDIR=/usr/lib/openapp-backup/modules
+BASEMODULES=/usr/lib/openapp-backup/modules
+MODULEDIR=/etc/openapp-backup/scripts.d
 WARNINGS=0
 FATALS=0
 
 ###
 # Now look for specific modules to backup
-MODULES=$(grep -H '^# Prio' ${MODULEDIR}/* | sort -k 3 -n | cut -f 1 -d :)
+MODULES=$(grep -H '^# Prio' "${MODULEDIR}"/* 2> /dev/null | sort -k 3 -n | cut -f 1 -d :)
+
+[ -z "${MODULES}" ] && echo "No configured modules found in ${MODULEDIR}, running all modules in ${BASEMODULES}"
+[ -z "${MODULES}" ] && MODULES=$(grep -H '^# Prio' "${BASEMODULES}"/* 2> /dev/null | sort -k 3 -n | cut -f 1 -d :)
+
 for SCRIPT in $MODULES; do
     echo "Running ${SCRIPT}"
     SCRIPTNAME=$(basename ${SCRIPT})

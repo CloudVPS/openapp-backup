@@ -2,3 +2,4 @@ usr/sbin
 usr/lib/openapp-backup/includes
 usr/lib/openapp-backup/modules
 usr/share/man/man1
+etc/openapp-backup/scripts.d

@@ -18,7 +18,17 @@ set -e
 # the debian-policy package
 
 case "$1" in
-    configure|abort-upgrade|abort-remove|abort-deconfigure)
+    configure)
+		echo "Creating symlinks for default scripts to run for openapp-backup"
+		SCRIPTS="dpkg etc"
+		BASEMODULES=/usr/lib/openapp-backup/modules
+		MODULEDIR=/etc/openapp-backup/scripts.d
+		for SCRIPT in ${SCRIPTS}; do
+			ln -s ${BASEMODULES}/${SCRIPT} ${MODULEDIR}/${SCRIPT}
+			echo "Enabling ${SCRIPT}"
+		done
+	;;
+	abort-upgrade|abort-remove|abort-deconfigure)
     ;;
 
     *)
