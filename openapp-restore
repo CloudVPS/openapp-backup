@@ -33,25 +33,23 @@ tar --numeric-owner -zxf ${1}
 
 ###
 # Make sure we run these first
-echo "Running dpkg-selections"
-OUTPUT=$(${BASEMODULES}/dpkg-selections ${BACKUPDIR}/${SCRIPTNAME} restore 2> /dev/null)
-[ -z "${OUTPUT}" ] || warning "${SCRIPT}: $OUTPUT"
-OUTPUT=
-echo "Running etc"
-OUTPUT=$(${BASEMODULES}/etc ${BACKUPDIR}/${SCRIPTNAME} restore 2> /dev/null)
-[ -z "${OUTPUT}" ] || warning "${SCRIPT}: $OUTPUT"
-OUTPUT=
+MODULES="dpkg-selections etc"
+for SCRIPT in $MODULES; do
+	echo "Running dpkg-selections"
+	OUTPUT=$(${BASEMODULES}/${SCRIPT} ${BACKUPDIR}/${SCRIPT} restore 2> /dev/null)
+	[ -z "${OUTPUT}" ] || warning "${SCRIPT}: $OUTPUT"
+done
 
 ###
 # Now look for specific modules to restore from
 MODULES=$(grep -H '^# Prio' "${MODULEDIR}"/* 2>/dev/null | sort -k 3 -n | cut -f 1 -d :)
 for SCRIPT in $MODULES; do
 	SCRIPTNAME=$(basename ${SCRIPT})
+	echo "Trying to run ${SCRIPTNAME}..."
 	###
 	# Don't run this script if the backup doesn't contain a dir for it.
 	[ -d ${BACKUPDIR}/${SCRIPTNAME} ] || continue
 
-	echo "Running ${SCRIPTNAME}..."
 	OUTPUT=$(${SCRIPT} ${BACKUPDIR}/${SCRIPTNAME} restore 2> /dev/null)
 
 	[ -z "${OUTPUT}" ] || warning "${SCRIPT}: $OUTPUT"
