@@ -14,7 +14,7 @@ run_backup() {
 }
 
 run_restore() {
-    rsync -a ${BACKUPDIR}/ /home
+    rsync -a ${BACKUPDIR}/home/ /home
 }
 
 case ${ACTION} in

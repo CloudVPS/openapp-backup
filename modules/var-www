@@ -14,7 +14,7 @@ run_backup() {
 }
 
 run_restore() {
-    rsync -a --delete ${BACKUPDIR}/ /var
+    rsync -a --delete ${BACKUPDIR}/www /var
 }
 
 case ${ACTION} in
