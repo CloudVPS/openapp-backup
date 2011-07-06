@@ -19,16 +19,19 @@ set -e
 
 case "$1" in
     configure)
-		echo "Creating symlinks for default scripts to run for openapp-backup"
-		SCRIPTS="dpkg-selections etc"
-		BASEMODULES=/usr/lib/openapp-backup/modules
-		MODULEDIR=/etc/openapp-backup/scripts.d
-		for SCRIPT in ${SCRIPTS}; do
-			ln -s ${BASEMODULES}/${SCRIPT} ${MODULEDIR}/${SCRIPT}
-			echo "Enabling ${SCRIPT}"
-		done
+		if [ -z $2 ]; then
+			echo "Creating symlinks for default scripts to run for openapp-backup"
+			SCRIPTS="dpkg-selections etc"
+			BASEMODULES=/usr/lib/openapp-backup/modules
+			MODULEDIR=/etc/openapp-backup/scripts.d
+			for SCRIPT in ${SCRIPTS}; do
+				# Only create syminks if they don't exist allready or are replaced by a file
+				[ -L "${MODULEDIR}/${SCRIPT}" -o -f "${MODULEDIR}/${SCRIPT}" ] || ln -s "${BASEMODULES}/${SCRIPT}" "${MODULEDIR}/${SCRIPT}"
+				echo "Enabling ${SCRIPT}"
+			done
+		fi
 	;;
-	abort-upgrade|abort-remove|abort-deconfigure)
+	abort-upgrade|abort-remove|abort-deconfigure|triggered)
     ;;
 
     *)
