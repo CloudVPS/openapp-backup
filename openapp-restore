@@ -33,7 +33,7 @@ tar --numeric-owner -zxf ${1}
 
 ###
 # Make sure we run these first
-MODULES="dpkg-selections etc"
+MODULES="dpkg-selections"
 for SCRIPT in $MODULES; do
 	echo "Running dpkg-selections"
 	OUTPUT=$(${BASEMODULES}/${SCRIPT} ${BACKUPDIR}/${SCRIPT} restore 2> /dev/null)

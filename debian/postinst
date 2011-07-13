@@ -21,7 +21,7 @@ case "$1" in
     configure)
 		if [ -z $2 ]; then
 			echo "Creating symlinks for default scripts to run for openapp-backup"
-			SCRIPTS="dpkg-selections etc"
+			SCRIPTS="dpkg-selections"
 			BASEMODULES=/usr/lib/openapp-backup/modules
 			MODULEDIR=/etc/openapp-backup/scripts.d
 			for SCRIPT in ${SCRIPTS}; do
