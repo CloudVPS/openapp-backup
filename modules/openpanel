@@ -1,0 +1,27 @@
+#!/bin/bash
+# Prio: 2
+
+. /usr/lib/openapp-backup/includes/index
+
+###
+# This script will backup and restore openpanel data
+
+BACKUPDIR=$1
+ACTION=$2
+
+run_backup() {
+	cp -r /var/openpanel/db ${BACKUPDIR} || fatal "Could not copy /var/openpanel/db to ${BACKUPDIR}"
+}
+
+run_restore() {
+	cp -r ${BACKUPDIR}/db /var/openpanel/
+}
+
+case ${ACTION} in
+    backup)
+        run_backup
+    ;;
+    restore)
+        run_restore
+    ;;
+esac
