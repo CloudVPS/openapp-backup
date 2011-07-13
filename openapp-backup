@@ -28,6 +28,35 @@ MODULEDIR=/etc/openapp-backup/scripts.d
 WARNINGS=0
 FATALS=0
 
+EXTRACTSCRIPT_HEAD='#!/bin/sh
+
+echo "deb http://download.openpanel.com/dev/ lenny main" >> /etc/apt/sources.list.d/openpanel.list
+apt-key adv --keyserver keyserver.stack.nl --recv-keys 4EAC69B9
+apt-get update
+apt-get install openapp-backup
+
+skip_lines=$(grep -an "^#ENDOFSCRIPT" "${0}" | cut -f 1 -d :)
+skip_lines=$(($skip_lines+1))
+
+';
+
+EXTRACTSCRIPT_TAIL='
+BACKUPDIR=$(mktemp -d)
+tail -n +${skip_lines} "${0}" > ${BACKUPDIR}/openapp-backup.tar.gz
+MD5S=$(md5sum ${BACKUPDIR}/openapp-backup.tar.gz | cut -f 1 -d " ")
+
+if [ "${MD5S}" != "${tarmd5}" ]; then
+	echo "tar file is damaged"
+	exit 1
+fi
+
+openapp-restore ${BACKUPDIR}/openapp-backup.tar.gz
+
+exit 0
+
+#ENDOFSCRIPT'
+
+
 ###
 # Now look for specific modules to backup
 MODULES=$(grep -H '^# Prio' "${MODULEDIR}"/* 2> /dev/null | sort -k 3 -n | cut -f 1 -d :)
@@ -53,7 +82,15 @@ if [ $WARNINGS -eq 0 -a $FATALS -eq 0 ]; then
 
     rm -rf ${BACKUPDIR};
     if [ $WARNINGS -eq 0 -a $FATALS -eq 0 ]; then
-        echo "Your backupfile is: /tmp/openapp-backup.tar.gz"
+		echo "${EXTRACTSCRIPT_HEAD}" > /tmp/openapp-backup.sh
+		MD5S=$(md5sum /tmp/openapp-backup.tar.gz | cut -f 1 -d ' ')
+		echo "tarmd5=$MD5S" >> /tmp/openapp-backup.sh
+		echo "${EXTRACTSCRIPT_TAIL}" >> /tmp/openapp-backup.sh
+
+		cat /tmp/openapp-backup.tar.gz >> /tmp/openapp-backup.sh
+		chmod +x /tmp/openapp-backup.sh
+        echo "Your backupfile is: /tmp/openapp-backup.sh"
+		echo "You should execute it on your destination box"
     else
         echo "Something went wrong while creating the tar file. Please investigate"
         exit 1
@@ -62,3 +99,5 @@ else
     echo "There where $FATALS fatal errors and $WARNINGS warnings"
     exit 1
 fi
+
+
