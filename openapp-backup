@@ -42,7 +42,7 @@ FATALS=0
 
 EXTRACTSCRIPT_HEAD='#!/bin/sh
 
-function show_help() {
+show_help() {
 	echo "$0 [-n]"
 	echo ""
 	echo "-n : Only extract the tar-file from this script"
