@@ -30,10 +30,27 @@ FATALS=0
 
 EXTRACTSCRIPT_HEAD='#!/bin/sh
 
-echo "deb http://download.openpanel.com/dev/ lenny main" >> /etc/apt/sources.list.d/openpanel.list
-apt-key adv --keyserver keyserver.stack.nl --recv-keys 4EAC69B9
-apt-get update
-apt-get install openapp-backup
+function show_help() {
+	echo "$0 [-n]"
+	echo ""
+	echo "-n : Only extract the tar-file from this script"
+	echo ""
+	echo "Default behaviour is to extract the tar file and run openapp-restore"
+	echo "You must be root to run this script."
+	exit 1;
+}
+
+if [ ! -z $1 ]; then
+	[ "$1" = "-n" ] || show_help
+	DRY_RUN=yes
+fi
+
+[ `id -u` -gt 0 ]  && show_help
+
+[ -z ${DRY_RUN} ] && echo "deb http://download.openpanel.com/dev/ lenny main" >> /etc/apt/sources.list.d/openpanel.list
+[ -z ${DRY_RUN} ] && apt-key adv --keyserver keyserver.stack.nl --recv-keys 4EAC69B9
+[ -z ${DRY_RUN} ] && apt-get update
+[ -z ${DRY_RUN} ] && apt-get install openapp-backup
 
 skip_lines=$(grep -an "^#ENDOFSCRIPT" "${0}" | cut -f 1 -d :)
 skip_lines=$(($skip_lines+1))
@@ -41,7 +58,8 @@ skip_lines=$(($skip_lines+1))
 ';
 
 EXTRACTSCRIPT_TAIL='
-BACKUPDIR=$(mktemp -d)
+[ -z ${DRY_RUN} ] && BACKUPDIR=$(mktemp -d)
+[ -z ${DRY_RUN} ] || BACKUPDIR=./
 tail -n +${skip_lines} "${0}" > ${BACKUPDIR}/openapp-backup.tar.gz
 MD5S=$(md5sum ${BACKUPDIR}/openapp-backup.tar.gz | cut -f 1 -d " ")
 
@@ -50,8 +68,8 @@ if [ "${MD5S}" != "${tarmd5}" ]; then
 	exit 1
 fi
 
-openapp-restore ${BACKUPDIR}/openapp-backup.tar.gz
-
+[ -z ${DRY_RUN} ] && openapp-restore ${BACKUPDIR}/openapp-backup.tar.gz
+[ -z ${DRY_RUN} ] || echo "Only extracted the tar file. You can use it manually with openapp-restore"
 exit 0
 
 #ENDOFSCRIPT'
