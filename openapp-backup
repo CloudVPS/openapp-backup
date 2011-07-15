@@ -10,17 +10,29 @@
 [ `id -u` -gt 0 ]  && fatal "This script must be run as root"
 
 function show_help() {
-	echo "openapp-backup [-n]"
+	echo "openapp-backup [-n|-t]"
 	echo ""
 	echo "-n : Only show which scripts you would run, don't actually do anything"
+	echo "-t : Do not create an executable script. Just create the tar-file for openapp-restore"
 	echo ""
 	exit 1;
 }
 
 if [ ! -z $1 ]; then
-	[ "$1" = "-n" ] || show_help
-	DRY_RUN=yes
+	case "$1" in
+	    -n)
+			DRY_RUN=yes
+		;;
+	    -t)
+			TAR_ONLY=yes
+		;;
+	    *)
+			show_help
+		;;
+	esac
 fi
+
+[ -z $2 ] || show_help
 
 [ -z ${DRY_RUN} ] && BACKUPDIR=$(mktemp -d)
 BASEMODULES=/usr/lib/openapp-backup/modules
@@ -100,15 +112,17 @@ if [ $WARNINGS -eq 0 -a $FATALS -eq 0 ]; then
 
     rm -rf ${BACKUPDIR};
     if [ $WARNINGS -eq 0 -a $FATALS -eq 0 ]; then
-		echo "${EXTRACTSCRIPT_HEAD}" > /tmp/openapp-backup.sh
-		MD5S=$(md5sum /tmp/openapp-backup.tar.gz | cut -f 1 -d ' ')
-		echo "tarmd5=$MD5S" >> /tmp/openapp-backup.sh
-		echo "${EXTRACTSCRIPT_TAIL}" >> /tmp/openapp-backup.sh
+		[ -z ${TAR_ONLY} ] && echo "${EXTRACTSCRIPT_HEAD}" > /tmp/openapp-backup.sh
+		[ -z ${TAR_ONLY} ] && MD5S=$(md5sum /tmp/openapp-backup.tar.gz | cut -f 1 -d ' ')
+		[ -z ${TAR_ONLY} ] && echo "tarmd5=$MD5S" >> /tmp/openapp-backup.sh
+		[ -z ${TAR_ONLY} ] && echo "${EXTRACTSCRIPT_TAIL}" >> /tmp/openapp-backup.sh
 
-		cat /tmp/openapp-backup.tar.gz >> /tmp/openapp-backup.sh
-		chmod +x /tmp/openapp-backup.sh
-        echo "Your backupfile is: /tmp/openapp-backup.sh"
-		echo "You should execute it on your destination box"
+		[ -z ${TAR_ONLY} ] && cat /tmp/openapp-backup.tar.gz >> /tmp/openapp-backup.sh
+		[ -z ${TAR_ONLY} ] && chmod +x /tmp/openapp-backup.sh
+        [ -z ${TAR_ONLY} ] && echo "Your backupfile is: /tmp/openapp-backup.sh"
+		[ -z ${TAR_ONLY} ] && echo "You should execute it on your destination box"
+		[ -z ${TAR_ONLY} ] || echo "Your backupfile is: //tmp/openapp-backup.tar.gz"
+		[ -z ${TAR_ONLY} ] || echo "You can use it with openapp-restore"
     else
         echo "Something went wrong while creating the tar file. Please investigate"
         exit 1

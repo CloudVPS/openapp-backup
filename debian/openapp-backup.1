@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH OPENAPP-JOOMLA-DETECT 1 "June 22, 2011"
+.TH OPENAPP-BACKUP 1 "July 15, 2011"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -16,34 +16,45 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-openapp-joomla-detect \- detect which version of Joomla this machine runs
+openapp-backup \- Create a backup of your OpenApp box
 .SH SYNOPSIS
-.B openapp-joomla-detect <installdir> [version to install]
+.B openapp-backup [-n|-t]
 .SH DESCRIPTION
 This manual page documents briefly the
-.B openapp-joomla-detect
+.B openapp-backup
 command.
 .PP
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
 .\" \fI<whatever>\fP escape sequences to invode bold face and italics,
 .\" respectively.
-\fBopenapp-joomla-detect\fP is a program that tries to find out which version
+\fBopenapp-backup\fP is a program that creates a backup of your current
 .br
-of Joomla is active on this machine. It is used by the postinst/postrm scripts in
+machine. It produces a executable restore file which you can run on your
 .br
-the openapp-joomla package to determine if an upgrade or install is needed.
+freshly installed targetbox. It will then create a (somewhat) exact copy of
 .br
-The versiondetection is needed because one can also upgrade Joomla via the
+this machine.
 .br
-Joomla frontend.
+.br
+It creates this backup with the help of scripts it finds in
+.br
+/etc/openapp-backup/scripts.d. Each script placed/linked to in that directory
+.br
+will be run if openapp-backup is executed. For more info on how to create a
+.br
+script yourselve, see openapp-backup-scripts(1).
 .SH OPTIONS
-This program needs at least one option, the directory to look for a Joomla install.
-.br
-Secondly (optional), the version of Joomla you are going to install. If only
-.br
-one argument is given, it prints the currently found version.
+This program accepts the following arguments:
+.TP 6
+-n
+Don't actually create a backup, but show you which scripts would be executed
+.TP
+-t
+Don't create an executable script. Just create the tar-file for openapp-restore
+.SH SEE ALSO
+openapp-backup-scripts(1) openapp-restore(1)
 .SH AUTHOR
-openapp-joomla-detect was written by Mark Schouten.
+openapp-backup was written by Mark Schouten.
 .PP
 This manual page was written by Mark Schouten <mark@tuxis.nl>, for the OpenApp
 .br

@@ -1,0 +1,105 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH OPENAPP-BACKUP-SCRIPTS 1 "July 15, 2011"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+openapp-backup-scripts \- Some explanation about openapp-backup
+.SH SYNOPSIS
+.B None
+.SH DESCRIPTION
+This manual page documents briefly the options of 
+.B openapp-backup
+scripts.
+.PP
+Each script found in /etc/openapp-backup/scripts.d/ is executed by
+.br
+openapp-backup and openapp-restore. The scripts are executed as followed:
+.br
+By openapp-backup
+.br
+ - $scriptname $tmpdir backup
+.sp 1
+ By openapp-restore
+.br
+  - $scriptname $tmpdir restore
+.PP
+$tempdir is the directory that openapp-(backup|restore) created, and the
+.br
+scriptname is appended to that. This is needed, so that openapp-restore can
+.br
+check if a script should be executed. If there is no directory with the
+.br
+scriptname, the won't be any data to restore either.
+.PP
+Each script MUST have the following line in it:
+.br
+# Prio X(.Y)(.Z0)
+.PP
+This priority is the priority that the script has in the order that
+.br
+openapp-(backup|restore) executes the script. The lowest value will be executed
+.br
+first. (To see the order of execution, run 'openapp-backup -n'.)
+.PP
+openapp-(backup|restore) does not check the exit code of these scripts. Output
+.br
+to STDERR is ignored. Output to STDOUT is used as an indicator that something
+.br
+MIGHT have gone wrong. So your script should be as silent as possible and only
+.br
+output stuff if something is word mentioning.
+
+A typical script looks like this:
+
+.nf
+#!/bin/bash
+# Prio: 2
+
+. /usr/lib/openapp-backup/includes/index
+
+###
+# Some comment about this script
+
+BACKUPDIR=$1
+ACTION=$2
+
+run_backup() {
+    # Copy /dev/null to the backup dir
+    cp /dev/null ${BACKUPDIR} || fatal "This did not work"
+}
+
+run_restore() {
+    # Restore /dev/null
+    cp ${BACKUPDIR}/null /dev || fatal "This obviously doesn't work"
+}
+
+case ${ACTION} in
+    backup)
+        run_backup
+    ;;
+    restore)
+        run_restore
+    ;;
+esac
+.fi
+.SH SEE ALSO
+openapp-backup(1) openapp-restore(1)
+.SH AUTHOR
+openapp-backup-scripts was written by Mark Schouten.
+.PP
+This manual page was written by Mark Schouten <mark@tuxis.nl>, for the OpenApp
+.br
+project (and may be used by others).

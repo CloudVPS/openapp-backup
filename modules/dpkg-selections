@@ -30,16 +30,16 @@ run_restore() {
 
     ###
     # Import keys from the old system
-    apt-key add ${BACKUPDIR}/apt-keys
+    apt-key add ${BACKUPDIR}/apt-keys > /dev/null
 
     ###
     # Run apt-get update
-    apt-get update
+    apt-get update > /dev/null
 
     ###
     # Now that we have all sources in place, let's set selections and install
-    cat ${BACKUPDIR}/dpkg-selections | dpkg --set-selections 
-    DEBIAN_FRONTEND=noninteractive apt-get -f -y --no-install-recommends --allow-unauthenticated dselect-upgrade
+    cat ${BACKUPDIR}/dpkg-selections | dpkg --set-selections  > /dev/null
+    DEBIAN_FRONTEND=noninteractive apt-get -f -y --no-install-recommends --allow-unauthenticated dselect-upgrade > /dev/null
 }
 
 

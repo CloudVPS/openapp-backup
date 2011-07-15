@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH OPENAPP-JOOMLA-DETECT 1 "June 22, 2011"
+.TH OPENAPP-RESTORE 1 "July 15, 2011"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -16,34 +16,43 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-openapp-joomla-detect \- detect which version of Joomla this machine runs
+openapp-restore \- Restores your OpenApp box
 .SH SYNOPSIS
-.B openapp-joomla-detect <installdir> [version to install]
+.B openapp-restore <filename>
 .SH DESCRIPTION
 This manual page documents briefly the
-.B openapp-joomla-detect
+.B openapp-restore
 command.
 .PP
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
 .\" \fI<whatever>\fP escape sequences to invode bold face and italics,
 .\" respectively.
-\fBopenapp-joomla-detect\fP is a program that tries to find out which version
+\fBopenapp-restore\fP is a program that restores your original OpenApp-box,
 .br
-of Joomla is active on this machine. It is used by the postinst/postrm scripts in
+based on the restore-file that openapp-backup(1) created. openapp-restore
 .br
-the openapp-joomla package to determine if an upgrade or install is needed.
+assumes that you are running it on a freshly installed machine. \fBIT WILL DELETE
 .br
-The versiondetection is needed because one can also upgrade Joomla via the
+AND/OR OVERWRITE EXISTING DATA IF YOU HAVE IT.\fP
+.PP
+It will always start by installing all the software you had on the original
 .br
-Joomla frontend.
+box. What it will do next depends on the original box. Please remember that
+.br
+\fBEXISTING DATA WILL BE DELETED\fP, probably in /home, /var/www and your databases.
+.PP
+BTW: Did I mention that openapp-restore will delete or overwrite your existing data?
+.br
+.br
 .SH OPTIONS
-This program needs at least one option, the directory to look for a Joomla install.
-.br
-Secondly (optional), the version of Joomla you are going to install. If only
-.br
-one argument is given, it prints the currently found version.
+This program has one required argument:
+.TP 12
+filename
+The tar-file that came from openapp-backup
+.SH SEE ALSO
+openapp-restore-scripts(1) openapp-backup(1)
 .SH AUTHOR
-openapp-joomla-detect was written by Mark Schouten.
+openapp-restore was written by Mark Schouten.
 .PP
 This manual page was written by Mark Schouten <mark@tuxis.nl>, for the OpenApp
 .br
