@@ -14,6 +14,7 @@ run_backup() {
     MYSQLDUMPOPTS="--defaults-file=/etc/mysql/debian.cnf --add-drop-database --add-locks --all-databases --allow-keywords --create-options --disable-keys --events --extended-insert --lock-all-tables --quick --routines"
     set -o pipefail
     mysqldump ${MYSQLDUMPOPTS} | gzip > ${BACKUPDIR}/mysqldump.sql.gz || fatal "Something went wrong while creating a database dump"
+	mkdir -p ${BACKUPDIR}/etc-mysql/
 	cp -r /etc/mysql/* ${BACKUPDIR}/etc-mysql/
 }
 
