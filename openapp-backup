@@ -95,7 +95,8 @@ MODULES=$(grep -H '^# Prio' "${MODULEDIR}"/* 2> /dev/null | sort -k 3 -n | cut -
 [ -z "${MODULES}" ] && MODULES=$(grep -H '^# Prio' "${BASEMODULES}"/* 2> /dev/null | sort -k 3 -n | cut -f 1 -d :)
 
 for SCRIPT in $MODULES; do
-    echo "Running ${SCRIPT}"
+	PRIO=$(grep '^# Prio' ${SCRIPT})
+    echo "Running ${SCRIPT} "${PRIO}
     SCRIPTNAME=$(basename ${SCRIPT})
 	[ -z ${DRY_RUN} ] && mkdir -p ${BACKUPDIR}/${SCRIPTNAME}
     [ -z ${DRY_RUN} ] && OUTPUT=$(${SCRIPT} ${BACKUPDIR}/${SCRIPTNAME} backup 2> /dev/null)
