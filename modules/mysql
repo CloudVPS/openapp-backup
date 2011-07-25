@@ -22,7 +22,7 @@ run_restore() {
     zcat ${BACKUPDIR}/mysqldump.sql.gz  | mysql --defaults-file=/etc/mysql/debian.cnf
     mysql --defaults-file=/etc/mysql/debian.cnf -e 'flush privileges'
 	cp -r ${BACKUPDIR}/etc-mysql/* /etc/mysql
-	/etc/init.d/mysql restart
+	restart mysql
 }
 
 case ${ACTION} in
