@@ -5,7 +5,7 @@ install:
 	cp openapp-backup $(PREFIX)usr/sbin
 	cp openapp-restore $(PREFIX)usr/sbin
 	cp openapp-backup-dismod $(PREFIX)usr/sbin
-	ln -s $(PREFIX)usr/sbin/openapp-backup-dismod $(PREFIX)usr/sbin/openapp-backup-enmod
+	ln -s openapp-backup-dismod $(PREFIX)usr/sbin/openapp-backup-enmod
 	cp -r includes $(PREFIX)usr/lib/openapp-backup
 	cp -r modules $(PREFIX)usr/lib/openapp-backup
 
