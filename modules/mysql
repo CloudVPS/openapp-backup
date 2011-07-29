@@ -13,14 +13,14 @@ run_backup() {
 	[ -x /usr/bin/mysqldump ] || fatal "Mysqldump is not installed. We will not run"
     MYSQLDUMPOPTS="--defaults-file=/etc/mysql/debian.cnf --add-drop-database --add-locks --all-databases --allow-keywords --create-options --disable-keys --events --extended-insert --lock-all-tables --quick --routines"
     set -o pipefail
-    mysqldump ${MYSQLDUMPOPTS} | gzip > ${BACKUPDIR}/mysqldump.sql.gz || fatal "Something went wrong while creating a database dump"
+    [ -r /etc/openapp-backup/scripts.d/xtrabackup ] || mysqldump ${MYSQLDUMPOPTS} | gzip > ${BACKUPDIR}/mysqldump.sql.gz || fatal "Something went wrong while creating a database dump"
 	mkdir -p ${BACKUPDIR}/etc-mysql/
 	cp -r /etc/mysql/* ${BACKUPDIR}/etc-mysql/
 }
 
 run_restore() {
-    zcat ${BACKUPDIR}/mysqldump.sql.gz  | mysql --defaults-file=/etc/mysql/debian.cnf
-    mysql --defaults-file=/etc/mysql/debian.cnf -e 'flush privileges'
+    [ -r /etc/openapp-backup/scripts.d/xtrabackup ] || zcat ${BACKUPDIR}/mysqldump.sql.gz  | mysql --defaults-file=/etc/mysql/debian.cnf
+    [ -r /etc/openapp-backup/scripts.d/xtrabackup ] || mysql --defaults-file=/etc/mysql/debian.cnf -e 'flush privileges'
 	cp -r ${BACKUPDIR}/etc-mysql/* /etc/mysql
 	restart mysql
 }
