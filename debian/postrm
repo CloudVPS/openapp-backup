@@ -26,9 +26,7 @@ case "$1" in
 		BASEMODULES=/usr/lib/openapp-backup/modules
 		MODULEDIR=/etc/openapp-backup/scripts.d
 		for SCRIPT in ${SCRIPTS}; do
-			# Only create syminks if they exist
-			[ -L "${MODULEDIR}/${SCRIPT}" ] && rm "${MODULEDIR}/${SCRIPT}"
-			echo "Disabling ${SCRIPT}"
+			openapp-backup-dismod $SCRIPT
 		done
     ;;
 

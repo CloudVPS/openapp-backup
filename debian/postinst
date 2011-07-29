@@ -25,9 +25,7 @@ case "$1" in
 			BASEMODULES=/usr/lib/openapp-backup/modules
 			MODULEDIR=/etc/openapp-backup/scripts.d
 			for SCRIPT in ${SCRIPTS}; do
-				# Only create syminks if they don't exist allready or are replaced by a file
-				[ -L "${MODULEDIR}/${SCRIPT}" -o -f "${MODULEDIR}/${SCRIPT}" ] || ln -s "${BASEMODULES}/${SCRIPT}" "${MODULEDIR}/${SCRIPT}"
-				echo "Enabling ${SCRIPT}"
+				openapp-backup-enmod $SCRIPT
 			done
 		fi
 	;;
