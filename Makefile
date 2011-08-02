@@ -18,7 +18,7 @@ install:
 	gzip $(PREFIX)usr/share/man/man1/openapp-backup-scripts.1
 	gzip $(PREFIX)usr/share/man/man1/openapp-backup-dismod.1
 	gzip $(PREFIX)usr/share/man/man1/openapp-restore.1
-    ln -s $(PREFIX)usr/share/man/man1/openapp-backup-dismod.1.gz openapp-backup-enmod.1.gz
+	ln -s $(PREFIX)usr/share/man/man1/openapp-backup-dismod.1.gz openapp-backup-enmod.1.gz
 
 uninstall:
 # bin
