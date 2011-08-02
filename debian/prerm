@@ -1,26 +1,24 @@
 #!/bin/sh
-# postrm script for foo
+# prerm script for openpanel-openapp-mod-backup
 #
 # see: dh_installdeb(1)
 
 set -e
 
 # summary of how this script can be called:
-#        * <postrm> `remove'
-#        * <postrm> `purge'
-#        * <old-postrm> `upgrade' <new-version>
-#        * <new-postrm> `failed-upgrade' <old-version>
-#        * <new-postrm> `abort-install'
-#        * <new-postrm> `abort-install' <old-version>
-#        * <new-postrm> `abort-upgrade' <old-version>
-#        * <disappearer's-postrm> `disappear' <overwriter>
-#          <overwriter-version>
+#        * <prerm> `remove'
+#        * <old-prerm> `upgrade' <new-version>
+#        * <new-prerm> `failed-upgrade' <old-version>
+#        * <conflictor's-prerm> `remove' `in-favour' <package> <new-version>
+#        * <deconfigured's-prerm> `deconfigure' `in-favour'
+#          <package-being-installed> <version> `removing'
+#          <conflicting-package> <version>
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
 
 case "$1" in
-    purge|remove|abort-install)
+    remove|deconfigure)
 		echo "Removing symlinks for openapp-backup placed by the installscript"
 		SCRIPTS="dpkg-selections"
 		BASEMODULES=/usr/lib/openapp-backup/modules
@@ -30,11 +28,11 @@ case "$1" in
 		done
     ;;
 
-    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-	;;
+    upgrade|failed-upgrade)
+    ;;
 
     *)
-        echo "postrm called with unknown argument \`$1'" >&2
+        echo "prerm called with unknown argument \`$1'" >&2
         exit 1
     ;;
 esac
