@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH OPENAPP-BACKUP 1 "July 15, 2011"
+.TH OPENAPP-BACKUP-ENMOD / OPENAPP-BACKUP-DISMOD 1 "July 15, 2011"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -16,45 +16,40 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-openapp-backup \- Create a backup of your OpenApp box
+openapp-backup-dismod \- Enable/disable modules for openapp-backup
 .SH SYNOPSIS
-.B openapp-backup [-n|-t]
+.B openapp-backup-dismod <modulename>
 .SH DESCRIPTION
 This manual page documents briefly the
-.B openapp-backup
-command.
+.B openapp-backup-dismod and openapp-backup-enmod
+commands.
 .PP
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
 .\" \fI<whatever>\fP escape sequences to invode bold face and italics,
 .\" respectively.
-\fBopenapp-backup\fP is a program that creates a backup of your current
+\fBopenapp-backup-dismod\fP is a program that allows you to easily enable and
 .br
-machine. It produces a executable restore file which you can run on your
+disable modules for openapp-backup. It scans /usr/lib/openapp-backup/modules
 .br
-freshly installed targetbox. It will then create a (somewhat) exact copy of
+for files and gives you a list of modules that you can enable. You can enter
 .br
-this machine.
+the modulename that you want to enable/disable as an argument as well.
+.br
+(Easy for scripts)
+.PP
 .br
 .br
-It creates this backup with the help of scripts it finds in
-.br
-/etc/openapp-backup/scripts.d. Each script placed/linked to in that directory
-.br
-will be run if openapp-backup is executed. For more info on how to create a
-.br
-script yourselve, see openapp-backup-scripts(1).
 .SH OPTIONS
-This program accepts the following arguments:
-.TP 6
--n
-Don't actually create a backup, but show you which scripts would be executed
-.TP
--t
-Don't create an executable script. Just create the tar-file for openapp-restore
+This program has one optional argument:
+.TP 12
+modulename
+The name of the module that you want to enable/disable
 .SH SEE ALSO
-openapp-backup-scripts(1) openapp-restore(1) openapp-backup-dismod(1)
+openapp-backup(1)
 .SH AUTHOR
-openapp-backup was written by Mark Schouten.
+These scripts are based on the scripts by Krzysztof Krzyzaniak for lighttpd,
+.br
+but were changed by Mark Schouten.
 .PP
 This manual page was written by Mark Schouten <mark@tuxis.nl>, for the OpenApp
 .br
