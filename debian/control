@@ -7,7 +7,7 @@ Standards-Version: 3.9.1
 
 Package: openapp-backup
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, bash
+Depends: ${shlibs:Depends}, ${misc:Depends}, bash, python-openpanel
 Description: Backup and restore you openpanel-openapp box without any hassle
  A backup and restore utility for OpenApp. Will create a new box practically
  identical to the source you use. Ideal for migrating to another VPS.

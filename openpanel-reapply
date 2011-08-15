@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from OpenPanel.coreclient import CoreSession
 import json, sys, collections
 
