@@ -4,6 +4,7 @@ install:
 # bin
 	cp openapp-backup $(PREFIX)usr/sbin
 	cp openapp-restore $(PREFIX)usr/sbin
+	cp openpanel-reapply $(PREFIX)usr/sbin
 	cp openapp-backup-dismod $(PREFIX)usr/sbin
 	ln -s openapp-backup-dismod $(PREFIX)usr/sbin/openapp-backup-enmod
 	cp -r includes $(PREFIX)usr/lib/openapp-backup
