@@ -6,7 +6,7 @@ Build-Depends: debhelper
 Standards-Version: 3.9.1
 
 Package: openapp-backup
-Architecture: any
+Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, bash, python-openpanel
 Description: Backup and restore you openpanel-openapp box without any hassle
  A backup and restore utility for OpenApp. Will create a new box practically
