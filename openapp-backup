@@ -125,8 +125,10 @@ if [ $WARNINGS -eq 0 -a $FATALS -eq 0 ]; then
 		[ -z ${TAR_ONLY} ] && echo "You should execute it on your destination box"
 		[ -z ${TAR_ONLY} ] || echo "Your backupfile is: //tmp/openapp-backup.tar.gz"
 		[ -z ${TAR_ONLY} ] || echo "You can use it with openapp-restore"
+        rm -rf /tmp/openapp-backup.tar.gz
     else
         echo "Something went wrong while creating the tar file. Please investigate"
+        rm -rf /tmp/openapp-backup.tar.gz
         exit 1
     fi
 else
